@@ -23,7 +23,7 @@ else {
 }
 
 include("analyse/graph.php");
-include("analyse/graph.php");
+include("analyse/table.php");
 ?>
 
 </body>

@@ -14,7 +14,7 @@ elseif ($sensor == 2) {$sensorName = "Spark Core";}
 $sql = "INSERT INTO groups (dtime, device) VALUES (NOW(), '$sensorName')";
 
 mysqli_query($con, $sql);
-echo $sql;
+
 mysqli_close($con);
 
 ?>

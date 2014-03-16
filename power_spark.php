@@ -10,6 +10,7 @@
 
 <div id="background">
 <?php
+include("scripts/data_start.php");
 include("elements/background.php");
 ?>
 </div>

@@ -16,10 +16,10 @@ include('datalogin.php');
 //get the date to analyse
 if (!($_GET['date'] == null)) {
 	$date = $_GET['date'];
-	$select = "SELECT * FROM sensor_values WHERE DATE(dtime) = '$date'";
+	//$select = "SELECT * FROM sensor_values WHERE DATE(dtime) = '$date'";
 }
 else {
-	$select = "SELECT * FROM sensor_values";
+	//$select = "SELECT * FROM sensor_values";
 }
 
 include("analyse/graph.php");

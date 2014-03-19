@@ -1,25 +1,9 @@
 <?php
-//check if this day was already analysed and stored in cache. 
-$result = mysqli_query($con, "SELECT * FROM `solar_power`.`days` WHERE DATE(`date`) = '".$date."' ORDER BY id DESC LIMIT 1");
-if (mysqli_num_rows($result) > 0) {
-	$result = mysqli_query($con, "SELECT * FROM `solar_power`.`days` WHERE DATE(`date`) = '".$date."' ORDER BY id DESC LIMIT 1");
-	
-	//set cached to true, for later text
-	$cached = true;
-	
-	foreach($result as $r) {
+include("../datalogin.php");
+$date = $_GET['date'];
+//recalculate all the data, same code as table.php
 
-	$row = mysqli_fetch_row($result)[0];	
-	$echo =  "<tr> <td><b>Interval: </b>".$r['interval_l']."</td> <td><b>Energie: </b>".$r['energy']." Wh</td> </tr> 
-	<tr> <td><b>Aantal meetwaarden: </b>".$r['number']."</td> <td><b>Gemiddeld vermogen: </b>". $r['av_power']." W</td> </tr>
-	<tr> <td><b>Weer: </b>".$r['weather']."</td> <td><b>Vermoedelijke storingen: </b>". $r['interupts']."</td> </tr>";
-}
-}
-else {
-	//set cache to false, for later text
-	$cached = false;
-	
-	$i =0;
+$i =0;
 	$av_power = 0;
 	$drop = 0;
 	$weather = "";
@@ -59,7 +43,7 @@ else {
 	    //calculate the average power and total energy
 	    $av_power /= $i;
 	    $energy = round($av_power * $interval->format('%H')+ $av_power * $interval->format('%I') / 60,3);
-	    $echo =  "<tr> <td><b>Interval: </b>".$interval->format('%H:%I:%s')."</td> <td><b>Energie: </b>".$energy." Wh</td> </tr>
+	    echo "<tr> <td><b>Interval: </b>".$interval->format('%H:%I:%s')."</td> <td><b>Energie: </b>".$energy." Wh</td> </tr>
 	    <tr> <td><b>Aantal meetwaarden: </b>".$i."</td> <td><b>Gemiddeld vermogen: </b>". round($av_power,3)." W</td> </tr>
 	    <tr> <td><b>Weer: </b>".$weather."</td> <td><b>Vermoedelijke storingen: </b>". $drop."</td> </tr>";
 
@@ -70,22 +54,12 @@ else {
    }
    else {
 	   $av_power /= $i;
-	   $echo = "<tr> <td><b>Interval: </b> 00:00:00 </td> <td><b>Energie: </b> 0.000 Wh</td> </tr>
+	   echo "<tr> <td><b>Interval: </b> 00:00:00 </td> <td><b>Energie: </b> 0.000 Wh</td> </tr>
 	   <tr> <td><b>Aantal meetwaarden: </b>".$i."</td> <td><b>Gemiddeld vermogen: </b>". round($av_power,3)." W</td> </tr>
 	   <tr> <td><b>Weer: </b> Onvoldoende gegevens </td> <td><b>Vermoedelijke storingen: </b> 0 </td> </tr>";
 
    } 
-}
+
+
+
 ?>
-
-
-<div class="panel panel-default" style="margin: 3%;">
-  <!-- Default panel contents -->
-  <div class="panel-heading"> <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> Eigenschappen <?php if ($cached == true){echo "<div id='cached'>Cache van ". $r['created'] . "</div>";}?></h3></div>
-  <table class="table table-striped">
-	  <tbody id="table_rapport">
-		  <?php echo $echo; ?>
-	  </tbody>
- </table>
-
-</div>

@@ -1,0 +1,7 @@
+#cached {
+	display: inline-flex;
+	font-size: 60%;
+	color: rgba(0,0,0,0.5);
+	text-decoration: underline;
+	cursor: hand;
+}

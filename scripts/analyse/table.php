@@ -12,7 +12,7 @@ if (mysqli_num_rows($result) > 0) {
 	$row = mysqli_fetch_row($result)[0];	
 	$echo =  "<tr> <td><b>Interval: </b>".$r['interval_l']."</td> <td><b>Energie: </b>".$r['energy']." Wh</td> </tr> 
 	<tr> <td><b>Aantal meetwaarden: </b>".$r['number']."</td> <td><b>Gemiddeld vermogen: </b>". $r['av_power']." W</td> </tr>
-	<tr> <td><b>Weer: </b>".$r['weather']."</td> <td><b>Vermoedelijke storingen: </b>". $r['interupts']."</td> </tr>";
+	<tr> <td><b>Weer: </b>".$r['weather'].", ".$r['temp']. " &deg; C </td> <td><b>Vermoedelijke storingen: </b>". $r['interupts']."</td> </tr>";
 }
 }
 else {
@@ -24,6 +24,7 @@ else {
 	$drop = 0;
 	$weather = "";
 	$power = 0;
+	$temp = 0;
 	$result_g = mysqli_query($con,"SELECT * FROM sensor_values WHERE DATE(`dtime`) = '".$date."' ");
     foreach($result_g as $row_g) {
     	$i++;
@@ -40,6 +41,7 @@ else {
     	if ($power > 0.05 && $weather == null) { 
     		$dtime_f = new DateTime($row_g['dtime']);
 	    	$weather = $row_g['weather'];
+	    	$temp = $row_g['T'] - 273.15;
     	}
     	
     	//get the weather and dtime a first time to make sure
@@ -61,11 +63,11 @@ else {
 	    $energy = round($av_power * $interval->format('%H')+ $av_power * $interval->format('%I') / 60,3);
 	    $echo =  "<tr> <td><b>Interval: </b>".$interval->format('%H:%I:%s')."</td> <td><b>Energie: </b>".$energy." Wh</td> </tr>
 	    <tr> <td><b>Aantal meetwaarden: </b>".$i."</td> <td><b>Gemiddeld vermogen: </b>". round($av_power,3)." W</td> </tr>
-	    <tr> <td><b>Weer: </b>".$weather."</td> <td><b>Vermoedelijke storingen: </b>". $drop."</td> </tr>";
+	    <tr> <td><b>Weer: </b>".$weather.", ".$temp. " &deg;C</td> <td><b>Vermoedelijke storingen: </b>". $drop."</td> </tr>";
 
 	    //check if they day is over and this can be stored in cache
 	    if (!(strtotime($date) == strtotime('now'))) {
-		    mysqli_query($con,"INSERT INTO `solar_power`.`days` (`interval_l`, `energy`, `number`, `av_power`, `weather`, `interupts`, `date`, `created`) VALUES ('".$interval->format('%H:%I:%s')."', '$energy', '$i', '". round($av_power,3)."', '$weather', '$drop', '$date', CURRENT_TIMESTAMP);");
+		    mysqli_query($con,"INSERT INTO `solar_power`.`days` (`interval_l`, `energy`, `number`, `av_power`, `weather`, `interupts`, `date`, `created`, `temp`) VALUES ('".$interval->format('%H:%I:%s')."', '$energy', '$i', '". round($av_power,3)."', '$weather', '$drop', '$date', CURRENT_TIMESTAMP, $temp);");
 	    }
    }
    else {

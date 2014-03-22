@@ -22,7 +22,7 @@ $i =0;
     	$power = $row_g['P'];
     	
     	//get the weather
-    	if ($power > 0.05 && $weather == null) { 
+    	if ($power > 0.02 && $weather == null) { 
     		$dtime_f = new DateTime($row_g['dtime']);
 	    	$weather = $row_g['weather'];
 	    	$temp = $row_g['T'] - 273.15;

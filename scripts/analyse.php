@@ -20,7 +20,8 @@ include('datalogin.php');
 //get the date to analyse
 if (!($_GET['date'] == null)) {
 	$date = $_GET['date'];
-	echo "<h1>$date</h1>"
+	$date_f =  DateTime::createFromFormat("Y-m-d",$date);
+	echo "<h1 style='margin: 3%;'>". date_format($date_f, 'd-m-Y')."</h1>";
 	include("analyse/graph.php");
 	include("analyse/table.php");
 	//$select = "SELECT * FROM sensor_values WHERE DATE(dtime) = '$date'";
